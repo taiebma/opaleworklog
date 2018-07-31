@@ -70,6 +70,11 @@ public class WorklogCreatedResolvedListener implements InitializingBean, Disposa
             CustomFieldManager customFieldManager = ComponentAccessor.getCustomFieldManager();
             CustomField cfOpale = customFieldManager.getCustomFieldObjectByName(ACTIVITY_OPALE);
             String codeActivity = (String)issue.getCustomFieldValue(cfOpale);
+            while (codeActivity == null) {
+                Issue parent = issue.getParentObject();
+                codeActivity = (String)parent.getCustomFieldValue(cfOpale);
+                issue = parent;
+            }
             CommentManager commentManager = ComponentAccessor.getCommentManager();
             String comment = "Activité OPALE " + codeActivity + " mise à jour du temps passé ";
             String currentUser = currentUser = ComponentAccessor.getJiraAuthenticationContext().getLoggedInUser().getUsername();
